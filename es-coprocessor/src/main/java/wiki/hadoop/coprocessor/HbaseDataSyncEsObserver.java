@@ -25,6 +25,52 @@ import java.util.*;
  *
  * https://www.codercto.com/a/57019.html
  */
+/**
+ * PUT user_test
+{
+  "settings": {
+    "number_of_replicas": 1
+    , "number_of_shards": 5
+  }
+}
+
+
+PUT user_test/_mapping/user_test_type
+{
+  
+  "user_test_type":{
+    "properties":{
+      "log_code":{"type":"text"},
+      "sys_code":{"type":"text"},
+      "biz_type":{"type":"text"},
+      "log_level":{"type":"text"},
+      "log_time":{"type":   "date",
+  "format": "yyy年MM月dd日 HH时mm分ss秒"},
+      "begin_time":{"type":   "date",
+  "format": "yyy年MM月dd日 HH时mm分ss秒"},
+      "end_time":{"type":   "date",
+  "format": "yyy年MM月dd日 HH时mm分ss秒"},
+      "client_ip":{"type":"text"},
+      "server_ip":{"type":"text"},
+      "log_msg":{"type":"text"},
+      "use_time":{"type":"long"},
+      "request_length":{"type":"long"},
+      "response_length":{"type":"long"},
+      "log_status":{"type":"short"},
+      "request_url":{"type":"text"},
+      "directory":{"type":"text"},
+      "download_type":{"type":"text"},
+      "task_keyword":{"type":"text","fielddata": true},
+      "kafka_topic":{"type":"text"},
+      "kafka_group":{"type":"text"},
+      "crawler_type":{"type":"text"},
+      "json":{"type":"text"}
+    }
+  }
+}
+ * @author jast
+ * @date 2020年8月11日 下午5:10:05
+ */
 public class HbaseDataSyncEsObserver implements RegionObserver , RegionCoprocessor {
 
     private static final Logger LOG = Logger.getLogger(HbaseDataSyncEsObserver.class);
@@ -65,21 +111,21 @@ public class HbaseDataSyncEsObserver implements RegionObserver , RegionCoprocess
             // set hbase family to es
             infoJson.put("info", json);
             LOG.info(json.toString());
-            ElasticSearchBulkOperator.addUpdateBuilderToBulk(ESClient.client.prepareUpdate("gejx_test","dmp_ods", indexId).setDocAsUpsert(true).setDoc(json));
+            ElasticSearchBulkOperator.addUpdateBuilderToBulk(ESClient.client.prepareUpdate("user_test","user_test_type", indexId).setDocAsUpsert(true).setDoc(json));
             LOG.info("**** postPut success*****");
         } catch (Exception ex) {
-            LOG.error("observer put  a doc, index [ " + "gejx_test" + " ]" + "indexId [" + indexId + "] error : " + ex.getMessage());
+            LOG.error("observer put  a doc, index [ " + "user_test" + " ]" + "indexId [" + indexId + "] error : " + ex.getMessage());
         }
     }
     @Override
     public void postDelete(ObserverContext<RegionCoprocessorEnvironment> e, Delete delete, WALEdit edit, Durability durability) throws IOException {
         String indexId = new String(delete.getRow());
         try {
-            ElasticSearchBulkOperator.addDeleteBuilderToBulk(ESClient.client.prepareDelete("gejx_test", "dmp_ods", indexId));
+            ElasticSearchBulkOperator.addDeleteBuilderToBulk(ESClient.client.prepareDelete("user_test", "user_test_type", indexId));
             LOG.info("**** postDelete success*****");
         } catch (Exception ex) {
             LOG.error(ex);
-            LOG.error("observer delete  a doc, index [ " + "gejx_test" + " ]" + "indexId [" + indexId + "] error : " + ex.getMessage());
+            LOG.error("observer delete  a doc, index [ " + "user_test" + " ]" + "indexId [" + indexId + "] error : " + ex.getMessage());
 
         }
     }
