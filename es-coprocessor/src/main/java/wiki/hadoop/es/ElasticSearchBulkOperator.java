@@ -27,19 +27,21 @@ public class ElasticSearchBulkOperator {
 
     private static ScheduledExecutorService scheduledExecutorService = null;
     static {
-        // init es bulkRequestBuilder
+        // 初始化  bulkRequestBuilder
         bulkRequestBuilder = ESClient.client.prepareBulk();
         bulkRequestBuilder.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
 
-        // init thread pool and set size 1
+        // 初始化线程池大小为1
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
-        // create beeper thread( it will be sync data to ES cluster)
-        // use a commitLock to protected bulk es as thread-save
+       //创建一个Runnable对象，提交待写入的数据，并使用commitLock锁保证线程安全
         final Runnable beeper = () -> {
             commitLock.lock();
             try {
+            	LOG.info("Before submission bulkRequest size : " +bulkRequestBuilder.numberOfActions());
+            	//提交数据至es
                 bulkRequest(0);
+                LOG.info("After submission bulkRequest size : " +bulkRequestBuilder.numberOfActions());
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             } finally {
@@ -47,8 +49,7 @@ public class ElasticSearchBulkOperator {
             }
         };
 
-        // set time bulk task
-        // set beeper thread(10 second to delay first execution , 30 second period between successive executions)
+        //初始化延迟10s执行 runnable方法，后期每隔30s执行一次
         scheduledExecutorService.scheduleAtFixedRate(beeper, 10, 30, TimeUnit.SECONDS);
 
     }

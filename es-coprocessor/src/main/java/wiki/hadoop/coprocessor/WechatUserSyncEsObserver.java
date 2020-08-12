@@ -21,62 +21,16 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created on 2019/1/10.
- *
- * https://www.codercto.com/a/57019.html
- */
-/**
- * PUT user_test
-{
-  "settings": {
-    "number_of_replicas": 1
-    , "number_of_shards": 5
-  }
-}
-
-
-PUT user_test/_mapping/user_test_type
-{
-  
-  "user_test_type":{
-    "properties":{
-      "log_code":{"type":"text"},
-      "sys_code":{"type":"text"},
-      "biz_type":{"type":"text"},
-      "log_level":{"type":"text"},
-      "log_time":{"type":   "date",
-  "format": "yyy年MM月dd日 HH时mm分ss秒"},
-      "begin_time":{"type":   "date",
-  "format": "yyy年MM月dd日 HH时mm分ss秒"},
-      "end_time":{"type":   "date",
-  "format": "yyy年MM月dd日 HH时mm分ss秒"},
-      "client_ip":{"type":"text"},
-      "server_ip":{"type":"text"},
-      "log_msg":{"type":"text"},
-      "use_time":{"type":"long"},
-      "request_length":{"type":"long"},
-      "response_length":{"type":"long"},
-      "log_status":{"type":"short"},
-      "request_url":{"type":"text"},
-      "directory":{"type":"text"},
-      "download_type":{"type":"text"},
-      "task_keyword":{"type":"text","fielddata": true},
-      "kafka_topic":{"type":"text"},
-      "kafka_group":{"type":"text"},
-      "crawler_type":{"type":"text"},
-      "json":{"type":"text"}
-    }
-  }
-}
+ * 
  * @author jast
- * @date 2020年8月11日 下午5:10:05
+ * @date 2020年8月12日 下午3:15:23
  */
-public class HbaseDataSyncEsObserver implements RegionObserver , RegionCoprocessor {
+public class WechatUserSyncEsObserver implements RegionObserver , RegionCoprocessor {
 
-    private static final Logger LOG = Logger.getLogger(HbaseDataSyncEsObserver.class);
+    private static final Logger LOG = Logger.getLogger(WechatUserSyncEsObserver.class);
 
-    private String index = "user_test";
-    private String type = "user_test_type";
+    private String index = "wechat_active_user";
+    private String type = index + "_type";
     public Optional<RegionObserver> getRegionObserver() {
         return Optional.of(this);
     }
