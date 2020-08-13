@@ -36,7 +36,7 @@
 - ES 创建索引
 
 ```json
-PUT self_media_account
+PUT tt_user
 {
   "settings": {
     "number_of_replicas": 1
@@ -45,10 +45,10 @@ PUT self_media_account
 }
 
 
-PUT self_media_account/_mapping/self_media_account_type
+PUT tt_user/_mapping/tt_user
 {
   
-  "self_media_account_type":{
+  "tt_user":{
     "properties":{
       "name":{"type":"text"},
       "city":{"type":"text"},
@@ -151,7 +151,32 @@ PUT local_user_warehouse/_mapping/local_user_warehouse_type
 }
 ```
 
+#### 安装协处理器
+```
+disable 'zh_ams_ns:tt_user'
+alter 'zh_ams_ns:tt_user' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.SelfMediaAccountSyncEsObserver|1001'
+enable 'zh_ams_ns:tt_user'
+desc 'zh_ams_ns:tt_user'
 
+
+disable 'infoManager:local_user_warehouse'
+alter 'infoManager:local_user_warehouse' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.LocalUserWarehouseSyncEsObserver|1001'
+enable 'infoManager:local_user_warehouse'
+desc 'infoManager:local_user_warehouse'
+
+
+disable 'crawl:wechat_account'
+alter 'crawl:wechat_account' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.WechatUserSyncEsObserver|1001'
+enable 'crawl:wechat_account'
+desc 'crawl:wechat_account'
+
+
+disable 'crawl:weibo_user'
+alter 'crawl:weibo_user' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.WeiboUserSyncEsObserver|1001'
+enable 'crawl:weibo_user'
+desc 'crawl:weibo_user'
+
+```
 
 
 

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * 
+ * 微信用户索引
  * @author jast
  * @date 2020年8月12日 下午3:15:23
  */
@@ -29,7 +29,7 @@ public class WechatUserSyncEsObserver implements RegionObserver , RegionCoproces
 
     private static final Logger LOG = Logger.getLogger(WechatUserSyncEsObserver.class);
 
-    private String index = "wechat_active_user";
+    private String index = "wechat_account";
     private String type = index + "_type";
     public Optional<RegionObserver> getRegionObserver() {
         return Optional.of(this);
