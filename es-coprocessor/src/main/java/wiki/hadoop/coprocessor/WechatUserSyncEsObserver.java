@@ -39,6 +39,7 @@ public class WechatUserSyncEsObserver implements RegionObserver , RegionCoproces
     public void start(CoprocessorEnvironment env) throws IOException {
         // init ES client
         ESClient.initEsClient();
+        ElasticSearchBulkOperator.init();
         LOG.info("****init start*****");
     }
 
@@ -66,9 +67,12 @@ public class WechatUserSyncEsObserver implements RegionObserver , RegionCoproces
             }
             // set hbase family to es
             infoJson.put("info", json);
-            LOG.info(json.toString());
+//            LOG.info(json.toString());
             ElasticSearchBulkOperator.addUpdateBuilderToBulk(ESClient.client.prepareUpdate(index,type, indexId).setDocAsUpsert(true).setDoc(json));
-            LOG.info("**** postPut success*****");
+            if(Bytes.toString(put.getRow()).contains("test")) {
+				LOG.info(json.toString());
+				LOG.info("**** postPut success*****");
+			}
         } catch (Exception ex) {
             LOG.error("observer put  a doc, index [ " + "user_test" + " ]" + "indexId [" + indexId + "] error : " + ex.getMessage());
         }

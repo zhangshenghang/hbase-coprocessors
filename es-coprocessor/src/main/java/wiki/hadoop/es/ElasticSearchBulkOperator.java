@@ -26,8 +26,13 @@ public class ElasticSearchBulkOperator {
     private static final Lock commitLock = new ReentrantLock();
 
     private static ScheduledExecutorService scheduledExecutorService = null;
+    
     static {
-        // 初始化  bulkRequestBuilder
+    	init();
+    }
+    
+    public static void init() {
+    	  // 初始化  bulkRequestBuilder
         bulkRequestBuilder = ESClient.client.prepareBulk();
         bulkRequestBuilder.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
 
@@ -51,8 +56,8 @@ public class ElasticSearchBulkOperator {
 
         //初始化延迟10s执行 runnable方法，后期每隔30s执行一次
         scheduledExecutorService.scheduleAtFixedRate(beeper, 10, 30, TimeUnit.SECONDS);
-
     }
+    
     public static void shutdownScheduEx() {
         if (null != scheduledExecutorService && !scheduledExecutorService.isShutdown()) {
             scheduledExecutorService.shutdown();
@@ -62,7 +67,13 @@ public class ElasticSearchBulkOperator {
         if (bulkRequestBuilder.numberOfActions() > threshold) {
             BulkResponse bulkItemResponse = bulkRequestBuilder.execute().actionGet();
             if (!bulkItemResponse.hasFailures()) {
+            	int beforeCount = bulkRequestBuilder.numberOfActions();
                 bulkRequestBuilder = ESClient.client.prepareBulk();
+                LOG.info("提交成功,提交前"+beforeCount+"\t提交后:"+bulkRequestBuilder.numberOfActions());
+            }else {
+            	LOG.error("异常1,待提交的数量为："+bulkRequestBuilder.numberOfActions());
+            	LOG.error("异常信息:"+bulkItemResponse.buildFailureMessage());
+                LOG.error("异常2,待提交的数量为："+bulkRequestBuilder.numberOfActions());
             }
         }
     }
@@ -78,7 +89,9 @@ public class ElasticSearchBulkOperator {
             bulkRequestBuilder.add(builder);
             bulkRequest(MAX_BULK_COUNT);
         } catch (Exception ex) {
-            LOG.error(" update Bulk " + "gejx_test" + " index error : " + ex.getMessage());
+            LOG.error(" update Bulk index error : " + ex.getMessage() + "\t" +ex.toString());
+            
+            ex.printStackTrace();
         } finally {
             commitLock.unlock();
         }

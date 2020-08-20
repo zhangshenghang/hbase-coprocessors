@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>es-coprocessor</artifactId>
 	<description>将用户保存至es</description>
-	<version>0.0.7</version>
+	<version>0.0.14</version>
 
 	<dependencies>
 

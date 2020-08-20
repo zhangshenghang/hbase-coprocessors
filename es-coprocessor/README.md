@@ -1,3 +1,9 @@
+# 文章记录
+```
+Hbase 协处理器之将数据保存到es （二级索引）
+https://datamining.blog.csdn.net/article/details/107958829
+```
+
 # 类说明
 
 #####  协处理器类
@@ -171,10 +177,17 @@ enable 'crawl:wechat_account'
 desc 'crawl:wechat_account'
 
 
-disable 'crawl:weibo_user'
-alter 'crawl:weibo_user' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.WeiboUserSyncEsObserver|1001'
-enable 'crawl:weibo_user'
-desc 'crawl:weibo_user'
+disable 'crawl:weibo_user_index'
+alter 'crawl:weibo_user_index' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.WeiboUserSyncEsObserver|1001'
+enable 'crawl:weibo_user_index'
+desc 'crawl:weibo_user_index'
+
+disable 'index_test'
+alter 'index_test' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.HbaseSyncEsObserverTest|1001'
+enable 'index_test'
+desc 'index_test'
+
+
 
 ```
 
