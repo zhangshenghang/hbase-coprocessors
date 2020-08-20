@@ -159,10 +159,10 @@ PUT local_user_warehouse/_mapping/local_user_warehouse_type
 
 #### 安装协处理器
 ```
-disable 'zh_ams_ns:tt_user'
-alter 'zh_ams_ns:tt_user' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.SelfMediaAccountSyncEsObserver|1001'
-enable 'zh_ams_ns:tt_user'
-desc 'zh_ams_ns:tt_user'
+disable 'zh_ams_ns:tt_user_index'
+alter 'zh_ams_ns:tt_user_index' , METHOD =>'table_att','coprocessor'=>'/es-coprocessor-0.0.7-jar-with-dependencies.jar|wiki.hadoop.coprocessor.SelfMediaAccountSyncEsObserver|1001'
+enable 'zh_ams_ns:tt_user_index'
+desc 'zh_ams_ns:tt_user_index'
 
 
 disable 'infoManager:local_user_warehouse'

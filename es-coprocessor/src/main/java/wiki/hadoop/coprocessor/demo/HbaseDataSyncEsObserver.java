@@ -1,4 +1,4 @@
-package wiki.hadoop.coprocessor;
+package wiki.hadoop.coprocessor.demo;
 
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
@@ -20,11 +20,7 @@ import wiki.hadoop.es.ElasticSearchBulkOperator;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Created on 2019/1/10.
- *
- * https://www.codercto.com/a/57019.html
- */
+
 /**
  * PUT user_test
 {
